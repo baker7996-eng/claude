@@ -50,7 +50,9 @@ Built primarily for one user (team id 66992), but may later support other users.
   `AUTH_SECRET` is set in Vercel. The owner can sign in with `OWNER_PIN`
   until they set their own PIN.
 - PINs: hashed (scrypt) with a version that bumps on change, stored in
-  Upstash Redis (`src/lib/store.ts`; in-memory fallback for local dev).
+  Upstash Redis (`src/lib/store.ts`; in-memory fallback for local dev). On
+  Vercel the integration provides `KV_REST_API_URL` / `KV_REST_API_TOKEN`.
+  Env var changes only reach the site after a new deployment.
   5 wrong tries locks a team for 15 minutes. Owner issues PINs at `/admin`;
   anyone changes theirs at `/me/pin`.
 - `/me` is each manager's private advice (`src/lib/advice.ts`): projected
