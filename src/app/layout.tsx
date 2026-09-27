@@ -11,8 +11,9 @@ import { ENTRY_ID } from "@/lib/config";
 import { fpl } from "@/lib/fpl/client";
 
 export const metadata: Metadata = {
-  title: "FPL Draft Assistant",
-  description: "Gameweek reviews and transfer suggestions for an FPL Draft league",
+  title: "No Friends in Fantasy",
+  description: "Our FPL Draft league: write-ups, advice and the table.",
+  appleWebApp: { capable: true, title: "NFIF", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {

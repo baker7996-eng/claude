@@ -132,6 +132,8 @@ export interface Fixture {
   kickoff_time: string | null;
   started: boolean;
   finished: boolean;
+  finished_provisional?: boolean;
+  minutes?: number;
 }
 
 export interface LiveStats {

@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Crest } from "@/components/logo";
 
 // Items without an href are on the roadmap and shown as "soon".
 const ITEMS: { label: string; href?: string }[] = [
   { label: "Home", href: "/" },
   { label: "My team", href: "/me" },
-  { label: "Write-ups", href: "/writeups" },
+  { label: "Matchday", href: "/matchday" },
   { label: "League", href: "/league" },
+  { label: "Write-ups", href: "/writeups" },
 ];
 
 function Item({ label, href, active }: { label: string; href?: string; active: boolean }) {
@@ -43,7 +45,8 @@ export function Nav({ leagueName }: { leagueName: string }) {
     <>
       <header className="sticky top-0 z-10 border-b border-line bg-pitch/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
-          <Link href="/" className="font-brand text-[17px] uppercase tracking-tight">
+          <Link href="/" className="flex items-center gap-2.5 font-brand text-[17px] uppercase tracking-tight">
+            <Crest />
             {rest.length ? (
               <>
                 {first} <span className="text-lime">in</span> {rest.join(" in ")}

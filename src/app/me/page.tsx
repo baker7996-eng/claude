@@ -24,7 +24,13 @@ export default async function MyTeamPage() {
             {advice.waivers && ` Waivers: ${ukTime(advice.waivers)}.`} Only you can see this page.
           </p>
         </div>
-        <div className="flex gap-4 text-xs font-semibold">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
+          <Link href="/me/draft" className="text-lime hover:underline">
+            Draft board
+          </Link>
+          <Link href="/league/trades" className="text-lime hover:underline">
+            Trade block
+          </Link>
           {me.isOwner && (
             <Link href="/admin" className="text-lime hover:underline">
               League PINs

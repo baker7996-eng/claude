@@ -63,6 +63,23 @@ Built primarily for one user (team id 66992), but may later support other users.
   season points and >=75% chance to play), fixture ticker, next opponents.
 - Home, League and My team all show the signed-in manager's own team.
 
+## League extras
+- `/league` (mood board + table), `/league/awards`, `/league/rivals[/a-b]`,
+  `/league/trades` share tabs (`src/app/league/layout.tsx`). Stats live in
+  `src/lib/league-stats.ts`: moods (league: 1st happy, 5th-6th sad; match:
+  live score or last result), rivalries, weekly awards, the Saliba Award
+  (longest run holding a currently-injured player on 0 minutes) and records.
+- Faces: `src/components/face.tsx` (SVG, CSS animations in globals.css,
+  off for reduced motion). Logo: `src/components/logo.tsx` + `src/app/icon.svg`;
+  PNG icons in `public/` and `src/app/apple-icon.png`, manifest in
+  `src/app/manifest.ts` (icons/manifest are exempt from the sign-in proxy).
+- Trade block (`src/lib/trades.ts`, actions in `src/app/trade-actions.ts`):
+  listings and offers in Redis; only current owners can list/offer; recipient
+  accepts/declines, sender withdraws. Real trades still happen in FPL.
+- `/matchday`: live H2H (`src/lib/matchday.ts`), refreshes every 60s via
+  `src/components/auto-refresh.tsx`; live FPL data cached 30s, finished GWs 1 day.
+- `/me/draft`: second-draft board (GW22) and squad needs (`src/lib/draft.ts`).
+
 ## Design ("Matchday" theme, chosen by the owner)
 - Dark only. Tokens in `src/app/globals.css` (`bg-pitch`, `bg-panel`,
   `border-line`, `text-ink`, `text-soft`, `text-lime` = you/positive,
@@ -77,7 +94,8 @@ Built primarily for one user (team id 66992), but may later support other users.
 1. Fact sheets (done) · 2. Deploy (done) + point scheduled tasks at them ·
 3. Matchday design + Home/League pages (done) · 3b. Automated write-ups
  (done) · 4. Per-manager sign-in +
- private My team advice (done) · 5. Matchday tab · 6. Predictions/season log in the app ·
+ private My team advice (done) · 5. Logo, moods, awards, rivals, trade block, Matchday, draft board (done) ·
+6. Write-up routine must publish to the live branch (see docs) ·
 7. Optional: app writes the reports itself via the Claude API
 
 ## Notes

@@ -95,7 +95,7 @@ export async function loadHome(entryId: number) {
 
   return {
     leagueName: league.league.name,
-    me: { name: me.entry_name, standing: standing(me.id) },
+    me: { name: me.entry_name, entryId: me.entry_id, standing: standing(me.id) },
     gw: upcomingGw,
     lastFinished,
     next: next && {

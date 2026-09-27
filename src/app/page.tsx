@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Face } from "@/components/face";
 import { Chip, FormStrip, Panel, Rows } from "@/components/ui";
 import { viewer } from "@/lib/auth";
 import { ukTime } from "@/lib/facts/text";
@@ -117,6 +118,7 @@ function LastResult({ data }: { data: HomeData }) {
   return (
     <Panel title="Last result" link={{ href: "/facts/review", label: "Facts" }}>
       <div className="mb-3 flex items-center gap-3">
+        <Face seed={data.me.entryId} mood={({ W: "happy", D: "neutral", L: "sad" } as const)[last.outcome]} size={56} />
         <span className={`display grid size-8 place-items-center rounded-[3px] text-xl font-extrabold text-pitch ${tone}`}>
           {last.outcome}
         </span>
