@@ -9,6 +9,7 @@ import {
   pointsByGameweek,
   type League,
 } from "./league";
+import { predictionRecord, scoredPredictions } from "@/lib/writeups";
 import { Sheet, tableText } from "./text";
 
 const FORM_WEEKS = 4;
@@ -127,6 +128,7 @@ export async function reviewFacts(requestedGw?: number, part?: string): Promise<
   }
   out.push("");
 
+  out.push("## Predictions", ...predictionsText(lg, gw), "");
   out.push("## League table", ...tableText(lg.table()), "");
   out.push("## Checks", ...checks.map((c) => `- ${c}`));
   return out.render(part);
@@ -232,4 +234,22 @@ function latestFinishedGameweek(lg: League): number | null {
     events.find((gw) => lg.league.matches.filter((m) => m.event === gw).every((m) => m.finished)) ??
     null
   );
+}
+
+function predictionsText(lg: League, gw: number): string[] {
+  const scored = scoredPredictions(lg.league);
+  const thisWeek = scored.find((g) => g.gw === gw);
+  const lines = thisWeek
+    ? thisWeek.ties.map(
+        (t) =>
+          `- ${t.teams[0]} v ${t.teams[1]}: predicted ${t.predicted.join("–")}, actual ${t.actual?.join("–") ?? "not played"} — ${t.verdict.toUpperCase()}`,
+      )
+    : [`No preview predictions were logged for gameweek ${gw}; skip the predictions bit.`];
+  const { hits, misses } = predictionRecord(scored.filter((g) => g.gw <= gw));
+  const history = scored
+    .filter((g) => g.gw < gw)
+    .map((g) => `GW${g.gw} ${g.ties.filter((t) => t.verdict === "hit").length}/${g.ties.length}`)
+    .join(", ");
+  lines.push(`Season record (right winner): ${hits} hits, ${misses} misses${history ? ` (earlier: ${history})` : ""}.`);
+  return lines;
 }

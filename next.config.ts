@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Write-ups are markdown files in /writeups, read at request time.
+  outputFileTracingIncludes: {
+    "/**": ["./writeups/**/*"],
+  },
 };
 
 export default nextConfig;

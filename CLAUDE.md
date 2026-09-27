@@ -28,16 +28,20 @@ Built primarily for one user (team id 66992), but may later support other users.
 - `npm run lint` / `npx tsc --noEmit` / `npm run build` — run all three before committing
 
 ## What exists
-- `/facts/review?gw=N&part=1|2|3|league` and `/facts/preview?...`: plain-text
-  fact sheets (`src/lib/facts/`). Consumed by the owner's two Claude scheduled
-  tasks (Thursday preview, Tuesday review) that write WhatsApp write-ups for the
-  league. Every number must come from FPL data; the review's "Checks" lines
-  verify each counted XI sums to the FPL score. Keep each part small (<5KB):
-  the tasks read them via WebFetch, which truncates long pages.
+- `/facts/review`, `/facts/preview` (`?gw=N&part=1|2|3|league`) and
+  `/facts/status`: plain-text fact sheets (`src/lib/facts/`). Every number in
+  a write-up must come from these; the review's "Check" lines verify each
+  counted XI sums to the FPL score.
+- Write-ups: markdown in `writeups/` (`gwNN-preview.md`, `gwNN-review.md`),
+  style guide `writeups/STYLE.md`, predictions `writeups/predictions.json`
+  (the app marks them hit/miss from real results). Shown at `/writeups` with
+  a "Send to WhatsApp" button (`src/lib/whatsapp.ts` converts formatting).
+- A Claude Code routine ("FPL write-ups", 4x daily) checks `/facts/status`
+  and writes/pushes due write-ups. Its prompt is in `docs/writeup-routine.md`.
+  It replaced the owner's old Cowork scheduled tasks and season-log artifact.
 - The group write-ups must never include transfer/waiver advice for the owner.
 - Deployed on Vercel at https://claude-delta-lovat-90.vercel.app from this
-  repo's default branch; every push redeploys. Replacement instructions for
-  the scheduled tasks live in `docs/scheduled-tasks.md`.
+  repo's default branch; every push redeploys.
 
 ## Design ("Matchday" theme, chosen by the owner)
 - Dark only. Tokens in `src/app/globals.css` (`bg-pitch`, `bg-panel`,
@@ -51,7 +55,8 @@ Built primarily for one user (team id 66992), but may later support other users.
 
 ## Roadmap
 1. Fact sheets (done) · 2. Deploy (done) + point scheduled tasks at them ·
-3. Matchday design + Home/League pages (done) · 4. Private waiver/trade
+3. Matchday design + Home/League pages (done) · 3b. Automated write-ups
+ (done) · 4. Private waiver/trade
  advice (Waivers tab) · 5. Matchday tab · 6. Predictions/season log in the app ·
 7. Optional: app writes the reports itself via the Claude API
 

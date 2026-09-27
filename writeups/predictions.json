@@ -1,0 +1,29 @@
+{
+  "_comment": "Predicted scorelines from each gameweek preview. The app compares them with real results. Scores are [first-named team, second-named team] as in the league fixture.",
+  "gameweeks": [
+    {
+      "gw": 3,
+      "ties": [
+        { "teams": ["Itch Isak", "BakersBoys"], "predicted": [54, 49] },
+        { "teams": ["Bruces Babies", "VARcelona"], "predicted": [52, 58] },
+        { "teams": ["Team Tippy", "Teej FC"], "predicted": [46, 61] }
+      ]
+    },
+    {
+      "gw": 4,
+      "ties": [
+        { "teams": ["BakersBoys", "Team Tippy"], "predicted": [52, 44] },
+        { "teams": ["Teej FC", "Bruces Babies"], "predicted": [54, 51] },
+        { "teams": ["VARcelona", "Itch Isak"], "predicted": [58, 45] }
+      ]
+    },
+    {
+      "gw": 5,
+      "ties": [
+        { "teams": ["Teej FC", "BakersBoys"], "predicted": [58, 47] },
+        { "teams": ["VARcelona", "Team Tippy"], "predicted": [61, 39] },
+        { "teams": ["Itch Isak", "Bruces Babies"], "predicted": [56, 48] }
+      ]
+    }
+  ]
+}

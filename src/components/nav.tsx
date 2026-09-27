@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 // Pages without an href are on the roadmap and shown as "soon".
 const ITEMS: { label: string; href?: string }[] = [
   { label: "Home", href: "/" },
-  { label: "Matchday" },
+  { label: "Write-ups", href: "/writeups" },
   { label: "Waivers" },
   { label: "League", href: "/league" },
 ];
@@ -35,7 +35,7 @@ function Item({ label, href, active }: { label: string; href?: string; active: b
 export function Nav({ leagueName }: { leagueName: string }) {
   const path = usePathname();
   const items = ITEMS.map((item) => (
-    <Item key={item.label} {...item} active={item.href === path} />
+    <Item key={item.label} {...item} active={item.href === "/" ? path === "/" : !!item.href && path.startsWith(item.href)} />
   ));
   const [first, ...rest] = leagueName.split(" in ");
 
