@@ -27,6 +27,14 @@ export const CHARACTERS: Record<number, Character> = {
     facialHair: "none",
     glasses: "none",
   },
+  313590: {
+    name: "Frank",
+    club: "Man City",
+    skin: "#f2c9ae",
+    hair: { colour: "#8a6a4a", style: "short-quiff" },
+    facialHair: "none",
+    glasses: "none",
+  },
   78782: {
     name: "Bruce",
     club: "Leeds United",
