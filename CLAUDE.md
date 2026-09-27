@@ -6,6 +6,12 @@ A personal web app that analyses an FPL **Draft** league (draft.premierleague.co
 gameweek reviews, free-agent rankings, and transfer/trade suggestions.
 Built primarily for one user (team id 66992), but may later support other users.
 
+## Working with the owner
+- The owner is new to Claude Code and learning as we go: explain what was done
+  and why in plain terms, and point out useful Claude Code habits.
+- End every reply with a clearly labelled "What you need to do" section of
+  simple numbered steps (or say plainly that nothing is needed).
+
 ## Stack
 - Next.js 16 (App Router, `src/`), TypeScript, Tailwind CSS v4.
 - All FPL requests go through `src/lib/fpl/client.ts` and run server-side only
