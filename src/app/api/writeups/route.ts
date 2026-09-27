@@ -1,12 +1,23 @@
-import { listWriteups, saveWriteup, slugFor, type Kind, type PredictedTie } from "@/lib/writeups";
+import { getWriteup, listWriteups, saveWriteup, slugFor, type Kind, type PredictedTie } from "@/lib/writeups";
 import { hasWriteupToken, unauthorized } from "@/lib/writeup-token";
 
 const MAX_MARKDOWN = 60_000;
 
-/** The routine reads recent write-ups (to keep running jokes going). */
+/**
+ * Recent write-ups (so the routine keeps running jokes going), or one by
+ * `?slug=` (including test uploads, for checking the routine).
+ */
 export async function GET(request: Request) {
   if (!hasWriteupToken(request)) return unauthorized();
-  const latest = Math.min(6, Number(new URL(request.url).searchParams.get("latest")) || 2);
+  const params = new URL(request.url).searchParams;
+  const slug = params.get("slug");
+  if (slug) {
+    const one = await getWriteup(slug);
+    return one
+      ? new Response(one.markdown, { headers: { "Content-Type": "text/plain; charset=utf-8" } })
+      : new Response("Not found.", { status: 404 });
+  }
+  const latest = Math.min(6, Number(params.get("latest")) || 2);
   const recent = (await listWriteups()).slice(0, latest);
   return new Response(recent.map((w) => `===== ${w.slug} =====\n${w.markdown}`).join("\n\n") || "No write-ups yet.", {
     headers: { "Content-Type": "text/plain; charset=utf-8" },

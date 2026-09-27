@@ -7,8 +7,9 @@ https://claude-delta-lovat-90.vercel.app/writeups with a "Send to WhatsApp"
 button. It doesn't use the git repo at all.
 
 Setup it depends on:
-- `WRITEUP_TOKEN` set in Vercel (Settings > Environment Variables) and in
-  the cloud environment the routine runs in (same value in both).
+- `WRITEUP_TOKEN` set in Vercel (Settings > Environment Variables). The
+  routine's saved prompt (claude.ai/code/routines) holds the same value in
+  its first step; this copy uses a placeholder so the secret isn't in git.
 - The environment's network allowlist includes `claude-delta-lovat-90.vercel.app`.
 
 The prompt below is what the routine runs. Keep it in sync with the routine
@@ -29,9 +30,9 @@ WebFetch summarises pages and can alter numbers. If a request fails, retry
 twice, then stop and report the error.
 
 The app's private endpoints need the header
-`Authorization: Bearer $WRITEUP_TOKEN` (an environment variable in this
-session). If WRITEUP_TOKEN is empty or the app answers 401, stop and report
-that the token is missing.
+`Authorization: Bearer $WRITEUP_TOKEN`. Start every Bash session with
+`export WRITEUP_TOKEN=<the token>` (the saved routine has the real value).
+If the app answers 401, stop and report that the token was rejected.
 
 ## 1. Is anything due?
 
