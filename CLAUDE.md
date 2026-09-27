@@ -39,10 +39,21 @@ Built primarily for one user (team id 66992), but may later support other users.
   repo's default branch; every push redeploys. Replacement instructions for
   the scheduled tasks live in `docs/scheduled-tasks.md`.
 
+## Design ("Matchday" theme, chosen by the owner)
+- Dark only. Tokens in `src/app/globals.css` (`bg-pitch`, `bg-panel`,
+  `border-line`, `text-ink`, `text-soft`, `text-lime` = you/positive,
+  `text-amber` = doubt, `text-loss` = loss/injury). Fonts are self-hosted
+  via @fontsource: Inter (body), Barlow Condensed (`display` utility for
+  uppercase headings/numbers), Archivo Black (`font-brand`, logo only).
+- Reuse `src/components/ui.tsx` (Panel, Chip, Rows, FormStrip) and
+  `src/components/nav.tsx`. Must work on phone (bottom tab bar, one column)
+  and laptop (top nav, `md:`/`lg:` grid). Screenshot both sizes before pushing.
+
 ## Roadmap
 1. Fact sheets (done) · 2. Deploy (done) + point scheduled tasks at them ·
-3. Predictions/season log in the app · 4. Private waiver/trade advice ·
-5. Optional: app writes the reports itself via the Claude API
+3. Matchday design + Home/League pages (done) · 4. Private waiver/trade
+ advice (Waivers tab) · 5. Matchday tab · 6. Predictions/season log in the app ·
+7. Optional: app writes the reports itself via the Claude API
 
 ## Notes
 - The FPL Draft API is unofficial and undocumented; field names may change.
