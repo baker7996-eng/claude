@@ -5,17 +5,18 @@ numbers with ~90 WebFetch calls against the FPL API, a hand-kept player-name
 map, and a list of endpoints they must avoid. The app now does all of that in
 code and serves the results as small plain-text fact sheets.
 
-Replace `APP_URL` below with the deployed address (for example
-`https://your-project.vercel.app`) before pasting.
+The app is deployed at https://claude-delta-lovat-90.vercel.app (Vercel
+redeploys it on every push). All eight parts below were checked through
+WebFetch on 27 Sep 2026 and came back complete and verbatim.
 
 ## Fact sheet URLs
 
 | Sheet | URL |
 |---|---|
-| Review, one H2H tie at a time | `APP_URL/facts/review?part=1`, `?part=2`, `?part=3` |
-| Review, results, league-wide stats, table, checks | `APP_URL/facts/review?part=league` |
-| Preview, one H2H tie at a time | `APP_URL/facts/preview?part=1`, `?part=2`, `?part=3` |
-| Preview, fixtures, stacking, table | `APP_URL/facts/preview?part=league` |
+| Review, one H2H tie at a time | `https://claude-delta-lovat-90.vercel.app/facts/review?part=1`, `?part=2`, `?part=3` |
+| Review, results, league-wide stats, table, checks | `https://claude-delta-lovat-90.vercel.app/facts/review?part=league` |
+| Preview, one H2H tie at a time | `https://claude-delta-lovat-90.vercel.app/facts/preview?part=1`, `?part=2`, `?part=3` |
+| Preview, fixtures, stacking, table | `https://claude-delta-lovat-90.vercel.app/facts/preview?part=league` |
 
 Add `&gw=N` to pick a specific gameweek (the review defaults to the latest
 finished one; the preview to the next one).
@@ -30,10 +31,10 @@ All numbers come from the league's fact sheet app, which reads the FPL
 Draft API directly in code. Fetch these four pages with WebFetch, asking
 for the text back verbatim:
 
-  APP_URL/facts/review?part=1
-  APP_URL/facts/review?part=2
-  APP_URL/facts/review?part=3
-  APP_URL/facts/review?part=league
+  https://claude-delta-lovat-90.vercel.app/facts/review?part=1
+  https://claude-delta-lovat-90.vercel.app/facts/review?part=2
+  https://claude-delta-lovat-90.vercel.app/facts/review?part=3
+  https://claude-delta-lovat-90.vercel.app/facts/review?part=league
 
 They cover the latest finished gameweek (add &gw=N for another one) and
 contain: every H2H score, every player in all six squads with points,
@@ -67,10 +68,10 @@ All numbers come from the league's fact sheet app, which reads the FPL
 Draft API directly in code. Fetch these four pages with WebFetch, asking
 for the text back verbatim:
 
-  APP_URL/facts/preview?part=1
-  APP_URL/facts/preview?part=2
-  APP_URL/facts/preview?part=3
-  APP_URL/facts/preview?part=league
+  https://claude-delta-lovat-90.vercel.app/facts/preview?part=1
+  https://claude-delta-lovat-90.vercel.app/facts/preview?part=2
+  https://claude-delta-lovat-90.vercel.app/facts/preview?part=3
+  https://claude-delta-lovat-90.vercel.app/facts/preview?part=league
 
 They cover the next gameweek and contain: the FPL deadline, the ten real
 fixtures with UK kick-off times, each manager's XI and bench with their

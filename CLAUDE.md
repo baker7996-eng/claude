@@ -29,9 +29,12 @@ Built primarily for one user (team id 66992), but may later support other users.
   verify each counted XI sums to the FPL score. Keep each part small (<5KB):
   the tasks read them via WebFetch, which truncates long pages.
 - The group write-ups must never include transfer/waiver advice for the owner.
+- Deployed on Vercel at https://claude-delta-lovat-90.vercel.app from this
+  repo's default branch; every push redeploys. Replacement instructions for
+  the scheduled tasks live in `docs/scheduled-tasks.md`.
 
 ## Roadmap
-1. Fact sheets (done) · 2. Deploy + point scheduled tasks at them ·
+1. Fact sheets (done) · 2. Deploy (done) + point scheduled tasks at them ·
 3. Predictions/season log in the app · 4. Private waiver/trade advice ·
 5. Optional: app writes the reports itself via the Claude API
 
