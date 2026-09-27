@@ -45,6 +45,7 @@ export interface Event {
   id: number;
   name: string;
   deadline_time: string;
+  waivers_time: string | null;
   finished: boolean;
 }
 
