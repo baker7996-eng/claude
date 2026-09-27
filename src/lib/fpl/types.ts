@@ -78,12 +78,12 @@ export interface Standing {
   league_entry: number;
   rank: number;
   last_rank: number | null;
-  total: number;
-  event_total?: number;
-  matches_won?: number;
-  matches_drawn?: number;
-  matches_lost?: number;
-  points_for?: number;
+  total: number; // league points (3 per win, 1 per draw)
+  matches_won: number;
+  matches_drawn: number;
+  matches_lost: number;
+  points_for: number;
+  points_against: number;
 }
 
 export interface Match {
@@ -117,4 +117,37 @@ export interface EntryEventPicks {
     is_captain: boolean;
     multiplier: number;
   }[];
+  subs: { element_in: number; element_out: number; event: number }[];
+}
+
+export interface Fixture {
+  id: number;
+  event: number;
+  team_h: number;
+  team_a: number;
+  team_h_score: number | null;
+  team_a_score: number | null;
+  kickoff_time: string | null;
+  started: boolean;
+  finished: boolean;
+}
+
+export interface LiveStats {
+  total_points: number;
+  minutes: number;
+  goals_scored: number;
+  assists: number;
+  clean_sheets: number;
+  goals_conceded: number;
+  own_goals: number;
+  penalties_saved: number;
+  penalties_missed: number;
+  yellow_cards: number;
+  red_cards: number;
+  saves: number;
+  bonus: number;
+}
+
+export interface EventLive {
+  elements: Record<string, { stats: LiveStats }>;
 }

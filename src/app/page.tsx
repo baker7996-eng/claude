@@ -53,6 +53,24 @@ export default async function Home() {
           {game.current_event_finished ? "Finished" : "In progress"}
         </p>
       </section>
+
+      <section className="rounded-xl border border-black/10 p-5 dark:border-white/15">
+        <p className="text-sm opacity-70">Fact sheets</p>
+        <ul className="mt-2 space-y-2">
+          <li>
+            <a className="font-semibold underline" href="/facts/review">
+              Latest gameweek review
+            </a>
+          </li>
+          {game.next_event && (
+            <li>
+              <a className="font-semibold underline" href="/facts/preview">
+                Gameweek {game.next_event} preview
+              </a>
+            </li>
+          )}
+        </ul>
+      </section>
     </div>
   );
 }

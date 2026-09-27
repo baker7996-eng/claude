@@ -21,9 +21,19 @@ Built primarily for one user (team id 66992), but may later support other users.
   draft.premierleague.com in its network settings.)
 - `npm run lint` / `npx tsc --noEmit` / `npm run build` — run all three before committing
 
+## What exists
+- `/facts/review?gw=N&part=1|2|3|league` and `/facts/preview?...`: plain-text
+  fact sheets (`src/lib/facts/`). Consumed by the owner's two Claude scheduled
+  tasks (Thursday preview, Tuesday review) that write WhatsApp write-ups for the
+  league. Every number must come from FPL data; the review's "Checks" lines
+  verify each counted XI sums to the FPL score. Keep each part small (<5KB):
+  the tasks read them via WebFetch, which truncates long pages.
+- The group write-ups must never include transfer/waiver advice for the owner.
+
 ## Roadmap
-0. Setup (done) · 1. Gameweek review · 2. Free agents & fixtures ·
-3. Transfer/trade recommendations · 4. Claude-written summaries, deploy, multi-user
+1. Fact sheets (done) · 2. Deploy + point scheduled tasks at them ·
+3. Predictions/season log in the app · 4. Private waiver/trade advice ·
+5. Optional: app writes the reports itself via the Claude API
 
 ## Notes
 - The FPL Draft API is unofficial and undocumented; field names may change.

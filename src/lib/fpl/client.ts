@@ -5,6 +5,8 @@ import type {
   ElementStatus,
   EntryEventPicks,
   EntryPublic,
+  EventLive,
+  Fixture,
   Game,
   LeagueDetails,
 } from "./types";
@@ -55,4 +57,6 @@ export const fpl = {
     get<LeagueDetails>(`/league/${leagueId}/details`),
   elementStatus: (leagueId: number) =>
     get<ElementStatus>(`/league/${leagueId}/element-status`),
+  live: (event: number) => get<EventLive>(`/event/${event}/live`),
+  fixtures: (event: number) => get<Fixture[]>(`/event/${event}/fixtures`),
 };
