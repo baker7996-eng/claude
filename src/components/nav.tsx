@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Pages without an href are on the roadmap and shown as "soon".
+// Items without an href are on the roadmap and shown as "soon".
 const ITEMS: { label: string; href?: string }[] = [
   { label: "Home", href: "/" },
+  { label: "My team", href: "/me" },
   { label: "Write-ups", href: "/writeups" },
-  { label: "Waivers" },
   { label: "League", href: "/league" },
 ];
 

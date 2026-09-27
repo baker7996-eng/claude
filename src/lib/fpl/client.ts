@@ -9,11 +9,13 @@ import type {
   Fixture,
   Game,
   LeagueDetails,
+  RatedFixture,
 } from "./types";
 
 // All FPL requests run on our server, never in the browser: the FPL site
 // doesn't allow cross-origin requests, and this lets us cache responses.
 const BASE_URL = "https://draft.premierleague.com/api";
+const CLASSIC_URL = "https://fantasy.premierleague.com/api";
 
 // Seconds to reuse a cached response before fetching fresh data.
 const REVALIDATE_SECONDS = 300;
@@ -29,10 +31,10 @@ export class FplError extends Error {
   }
 }
 
-async function get<T>(path: string): Promise<T> {
+async function get<T>(path: string, base = BASE_URL): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}${path}`, {
+    res = await fetch(`${base}${path}`, {
       next: { revalidate: REVALIDATE_SECONDS },
     });
   } catch (err) {
@@ -59,4 +61,7 @@ export const fpl = {
     get<ElementStatus>(`/league/${leagueId}/element-status`),
   live: (event: number) => get<EventLive>(`/event/${event}/live`),
   fixtures: (event: number) => get<Fixture[]>(`/event/${event}/fixtures`),
+  // The main FPL game rates each fixture's difficulty (1 easy - 5 hard);
+  // Draft doesn't. Team ids are the same in both games.
+  difficulty: () => get<RatedFixture[]>("/fixtures/", CLASSIC_URL),
 };

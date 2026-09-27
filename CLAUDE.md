@@ -43,6 +43,23 @@ Built primarily for one user (team id 66992), but may later support other users.
 - Deployed on Vercel at https://claude-delta-lovat-90.vercel.app from this
   repo's default branch; every push redeploys.
 
+## Sign-in and My team
+- Members only: `src/proxy.ts` sends anyone without a signed session cookie
+  to `/login` (team + PIN). `/facts/*` stays open for the write-up routine.
+  Sign-in is OFF (site open, everyone treated as the owner) until
+  `AUTH_SECRET` is set in Vercel. The owner can sign in with `OWNER_PIN`
+  until they set their own PIN.
+- PINs: hashed (scrypt) with a version that bumps on change, stored in
+  Upstash Redis (`src/lib/store.ts`; in-memory fallback for local dev).
+  5 wrong tries locks a team for 15 minutes. Owner issues PINs at `/admin`;
+  anyone changes theirs at `/me/pin`.
+- `/me` is each manager's private advice (`src/lib/advice.ts`): projected
+  points over 3 GWs (60% last-4 form + 40% PPG, scaled by FPL fixture
+  difficulty from fantasy.premierleague.com and chance of playing), waiver
+  swaps, trade ideas (their player projects higher, ours has >=90% of their
+  season points and >=75% chance to play), fixture ticker, next opponents.
+- Home, League and My team all show the signed-in manager's own team.
+
 ## Design ("Matchday" theme, chosen by the owner)
 - Dark only. Tokens in `src/app/globals.css` (`bg-pitch`, `bg-panel`,
   `border-line`, `text-ink`, `text-soft`, `text-lime` = you/positive,
@@ -56,8 +73,8 @@ Built primarily for one user (team id 66992), but may later support other users.
 ## Roadmap
 1. Fact sheets (done) · 2. Deploy (done) + point scheduled tasks at them ·
 3. Matchday design + Home/League pages (done) · 3b. Automated write-ups
- (done) · 4. Private waiver/trade
- advice (Waivers tab) · 5. Matchday tab · 6. Predictions/season log in the app ·
+ (done) · 4. Per-manager sign-in +
+ private My team advice (done) · 5. Matchday tab · 6. Predictions/season log in the app ·
 7. Optional: app writes the reports itself via the Claude API
 
 ## Notes

@@ -39,6 +39,7 @@ export interface Player {
   clean_sheets: number;
   expected_goals?: string;
   expected_assists?: string;
+  draft_rank?: number;
 }
 
 export interface Event {
@@ -151,4 +152,14 @@ export interface LiveStats {
 
 export interface EventLive {
   elements: Record<string, { stats: LiveStats }>;
+}
+
+/** A fixture from the main FPL game, with difficulty for each side. */
+export interface RatedFixture {
+  event: number | null;
+  team_h: number;
+  team_a: number;
+  team_h_difficulty: number;
+  team_a_difficulty: number;
+  kickoff_time: string | null;
 }

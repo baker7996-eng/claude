@@ -1,6 +1,5 @@
 import "server-only";
 
-import { ENTRY_ID } from "@/lib/config";
 import { loadLeague, picksOrNull } from "@/lib/facts/league";
 import { fpl } from "@/lib/fpl/client";
 import type { Match, Player } from "@/lib/fpl/types";
@@ -8,11 +7,11 @@ import type { Match, Player } from "@/lib/fpl/types";
 export type Outcome = "W" | "D" | "L";
 
 /** Everything the home page shows, from live FPL data. */
-export async function loadHome() {
+export async function loadHome(entryId: number) {
   const lg = await loadLeague();
   const { game, league, bootstrap } = lg;
 
-  const me = league.league_entries.find((e) => e.entry_id === ENTRY_ID)!;
+  const me = league.league_entries.find((e) => e.entry_id === entryId)!;
   const lastFinished = game.current_event_finished ? game.current_event : game.current_event - 1;
   const upcomingGw = game.current_event_finished ? game.next_event : game.current_event;
 
@@ -44,7 +43,7 @@ export async function loadHome() {
 
   const next = nextMatch ? side(nextMatch) : null;
   const [myPicks, theirPicks, fixtures, lastLive, status] = await Promise.all([
-    squadFor(ENTRY_ID),
+    squadFor(entryId),
     next ? squadFor(next.opponent.entry_id) : null,
     upcomingGw ? fpl.fixtures(upcomingGw) : [],
     lastFinished > 0 ? fpl.live(lastFinished) : null,

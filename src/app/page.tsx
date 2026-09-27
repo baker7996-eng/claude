@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { Chip, FormStrip, Panel, Rows } from "@/components/ui";
+import { viewer } from "@/lib/auth";
 import { ukTime } from "@/lib/facts/text";
 import { FplError } from "@/lib/fpl/client";
 import { loadHome, type HomeData } from "@/lib/home";
@@ -8,7 +10,9 @@ import { loadHome, type HomeData } from "@/lib/home";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const data = await loadHome().catch((err) => {
+  const me = await viewer();
+  if (!me) redirect("/login");
+  const data = await loadHome(me.entryId).catch((err) => {
     if (err instanceof FplError) return err;
     throw err;
   });

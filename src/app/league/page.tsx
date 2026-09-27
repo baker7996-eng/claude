@@ -1,12 +1,15 @@
 import { Panel } from "@/components/ui";
-import { ENTRY_ID } from "@/lib/config";
+import { redirect } from "next/navigation";
+import { viewer } from "@/lib/auth";
 import { loadLeague } from "@/lib/facts/league";
 
 export const dynamic = "force-dynamic";
 
 export default async function LeaguePage() {
+  const me = await viewer();
+  if (!me) redirect("/login?next=/league");
   const lg = await loadLeague();
-  const myName = lg.league.league_entries.find((e) => e.entry_id === ENTRY_ID)?.entry_name;
+  const myName = lg.league.league_entries.find((e) => e.entry_id === me.entryId)?.entry_name;
   const name = (id: number) => lg.entries.get(id)?.entry_name ?? "?";
 
   const finished = lg.league.matches.filter((m) => m.finished);
