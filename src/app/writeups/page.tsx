@@ -6,9 +6,9 @@ import { listWriteups, predictionRecord, scoredPredictions, type Verdict } from 
 export const dynamic = "force-dynamic";
 
 export default async function WriteupsPage() {
-  const writeups = listWriteups();
+  const writeups = await listWriteups();
   const lg = await loadLeague();
-  const scored = scoredPredictions(lg.league);
+  const scored = await scoredPredictions(lg.league);
   const { hits, misses } = predictionRecord(scored);
 
   return (

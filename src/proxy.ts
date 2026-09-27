@@ -15,7 +15,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except the login page, the fact sheets the write-up job reads,
-  // app icons and manifest (phones fetch these before signing in), and
-  // Next.js's own files.
-  matcher: ["/((?!login|facts|_next|favicon.ico|icon|apple-icon|manifest.webmanifest).*)"],
+  // the write-up API (it checks its own token), app icons and manifest (phones
+  // fetch these before signing in), and Next.js's own files.
+  matcher: ["/((?!login|facts|api/writeups|_next|favicon.ico|icon|apple-icon|manifest.webmanifest).*)"],
 };

@@ -128,7 +128,7 @@ export async function reviewFacts(requestedGw?: number, part?: string): Promise<
   }
   out.push("");
 
-  out.push("## Predictions", ...predictionsText(lg, gw), "");
+  out.push("## Predictions", ...(await predictionsText(lg, gw)), "");
   out.push("## League table", ...tableText(lg.table()), "");
   out.push("## Checks", ...checks.map((c) => `- ${c}`));
   return out.render(part);
@@ -236,8 +236,8 @@ function latestFinishedGameweek(lg: League): number | null {
   );
 }
 
-function predictionsText(lg: League, gw: number): string[] {
-  const scored = scoredPredictions(lg.league);
+async function predictionsText(lg: League, gw: number): Promise<string[]> {
+  const scored = await scoredPredictions(lg.league);
   const thisWeek = scored.find((g) => g.gw === gw);
   const lines = thisWeek
     ? thisWeek.ties.map(

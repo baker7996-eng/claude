@@ -26,14 +26,14 @@ export async function statusFacts(now = new Date()): Promise<string> {
   const latestFinished = finishedGws[0];
 
   const out = [`Now: ${ukTime(now.toISOString())} (UK)`];
-  out.push(`Saved write-ups: ${listWriteups().map((w) => w.slug).join(", ") || "none"}`);
+  out.push(`Saved write-ups: ${(await listWriteups()).map((w) => w.slug).join(", ") || "none"}`);
 
   if (upcoming && matchesFor(upcoming.id).length > 0) {
     const deadline = new Date(upcoming.deadline_time);
     const opens = startOfUkDayBefore(deadline);
     const hours = Math.round((deadline.getTime() - now.getTime()) / 3_600_000);
     out.push(`Next deadline: gameweek ${upcoming.id}, ${ukTime(upcoming.deadline_time)} (UK), in ${hours}h`);
-    if (hasWriteup(upcoming.id, "preview")) {
+    if (await hasWriteup(upcoming.id, "preview")) {
       out.push(`PREVIEW: not due (gameweek ${upcoming.id} preview already saved)`);
     } else if (now >= opens) {
       out.push(`PREVIEW: DUE for gameweek ${upcoming.id}`);
@@ -46,7 +46,7 @@ export async function statusFacts(now = new Date()): Promise<string> {
 
   if (!latestFinished) {
     out.push("REVIEW: not due (no gameweek has finished)");
-  } else if (hasWriteup(latestFinished, "review")) {
+  } else if (await hasWriteup(latestFinished, "review")) {
     out.push(`REVIEW: not due (gameweek ${latestFinished} review already saved)`);
   } else {
     out.push(`REVIEW: DUE for gameweek ${latestFinished}`);

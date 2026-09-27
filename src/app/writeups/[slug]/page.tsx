@@ -4,13 +4,13 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ShareButtons } from "@/components/share-buttons";
 import { toWhatsApp } from "@/lib/whatsapp";
-import { listWriteups } from "@/lib/writeups";
+import { getWriteup } from "@/lib/writeups";
 
 export const dynamic = "force-dynamic";
 
 export default async function WriteupPage({ params }: PageProps<"/writeups/[slug]">) {
   const { slug } = await params;
-  const writeup = listWriteups().find((w) => w.slug === slug);
+  const writeup = await getWriteup(slug);
   if (!writeup) notFound();
 
   return (

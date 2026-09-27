@@ -36,9 +36,15 @@ Built primarily for one user (team id 66992), but may later support other users.
   style guide `writeups/STYLE.md`, predictions `writeups/predictions.json`
   (the app marks them hit/miss from real results). Shown at `/writeups` with
   a "Send to WhatsApp" button (`src/lib/whatsapp.ts` converts formatting).
-- A Claude Code routine ("FPL write-ups", 4x daily) checks `/facts/status`
-  and writes/pushes due write-ups. Its prompt is in `docs/writeup-routine.md`.
-  It replaced the owner's old Cowork scheduled tasks and season-log artifact.
+- A Claude Code routine ("FPL write-ups", 4x daily) checks `/facts/status`,
+  writes due write-ups and uploads them to `POST /api/writeups` (bearer
+  `WRITEUP_TOKEN`, set in Vercel and the cloud environment); no git involved.
+  Uploads and their predictions live in Redis alongside the committed files
+  in `writeups/` (`src/lib/writeups.ts`). `/api/writeups` (GET, recent) and
+  `/api/writeups/style` are token-only. Prompt: `docs/writeup-routine.md`.
+  It replaced the owner's old scheduled tasks (paused) and season-log artifact.
+- Manager characters: photo-derived cartoon notes in `src/lib/characters.ts`
+  (photos are not stored), each in their supported club's kit.
 - The group write-ups must never include transfer/waiver advice for the owner.
 - Deployed on Vercel at https://claude-delta-lovat-90.vercel.app from this
   repo's default branch; every push redeploys.
@@ -95,7 +101,7 @@ Built primarily for one user (team id 66992), but may later support other users.
 3. Matchday design + Home/League pages (done) · 3b. Automated write-ups
  (done) · 4. Per-manager sign-in +
  private My team advice (done) · 5. Logo, moods, awards, rivals, trade block, Matchday, draft board (done) ·
-6. Write-up routine must publish to the live branch (see docs) ·
+6. Characters from photos in club kits ·
 7. Optional: app writes the reports itself via the Claude API
 
 ## Notes
