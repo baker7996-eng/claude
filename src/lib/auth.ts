@@ -1,7 +1,7 @@
 import "server-only";
 
 import { randomInt, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { ENTRY_ID } from "@/lib/config";
 import { authSecret, decodeSession, encodeSession, SESSION_COOKIE, SESSION_DAYS } from "@/lib/session";
 import { store } from "@/lib/store";
@@ -33,7 +33,12 @@ function pinMatches(pin: string, stored: string) {
 export const isValidPin = (pin: string) => /^\d{4,8}$/.test(pin);
 
 const pinKey = (entryId: number) => `pin:${entryId}`;
-const failKey = (entryId: number) => `fails:${entryId}`;
+// Failed attempts are counted per team AND per device (IP address), so
+// someone guessing wrong locks out only themselves, not the team's owner.
+async function failKey(entryId: number) {
+  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+  return `fails:${entryId}:${ip}`;
+}
 
 export async function pinRecord(entryId: number) {
   return store.get<PinRecord>(pinKey(entryId));
@@ -54,11 +59,13 @@ export async function resetPin(entryId: number) {
 export type SignInResult = "ok" | "wrong" | "locked" | "no-pin";
 
 /**
- * Check a team's PIN. The owner can always sign in with OWNER_PIN until they
- * set their own. Five wrong attempts lock the team for 15 minutes.
+ * Check a team's PIN. The owner can sign in with OWNER_PIN until they set
+ * their own. Five wrong attempts from one device lock that device out of that
+ * team for 15 minutes.
  */
 export async function checkPin(entryId: number, pin: string): Promise<SignInResult> {
-  const fails = (await store.get<number>(failKey(entryId))) ?? 0;
+  const key = await failKey(entryId);
+  const fails = (await store.get<number>(key)) ?? 0;
   if (fails >= MAX_FAILS) return "locked";
 
   const record = await pinRecord(entryId);
@@ -67,10 +74,10 @@ export async function checkPin(entryId: number, pin: string): Promise<SignInResu
 
   const ok = record ? pinMatches(pin, record.hash) : pin === ownerPin;
   if (!ok) {
-    await store.incr(failKey(entryId), LOCK_SECONDS);
+    await store.incr(key, LOCK_SECONDS);
     return "wrong";
   }
-  await store.del(failKey(entryId));
+  await store.del(key);
   return "ok";
 }
 

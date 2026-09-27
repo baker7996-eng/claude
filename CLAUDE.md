@@ -53,7 +53,8 @@ Built primarily for one user (team id 66992), but may later support other users.
   Upstash Redis (`src/lib/store.ts`; in-memory fallback for local dev). On
   Vercel the integration provides `KV_REST_API_URL` / `KV_REST_API_TOKEN`.
   Env var changes only reach the site after a new deployment.
-  5 wrong tries locks a team for 15 minutes. Owner issues PINs at `/admin`;
+  5 wrong tries lock that device (IP) out of that team for 15 minutes, so a
+  prankster locks out only themselves. Owner issues PINs at `/admin`;
   anyone changes theirs at `/me/pin`.
 - `/me` is each manager's private advice (`src/lib/advice.ts`): projected
   points over 3 GWs (60% last-4 form + 40% PPG, scaled by FPL fixture
