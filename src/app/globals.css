@@ -84,3 +84,31 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .face .face-body, .face .face-eyes, .face .face-tear { animation: none; }
 }
+
+/* Matchday: 12+ point players' names burn */
+.on-fire {
+  background: linear-gradient(0deg, #ff4d1a, #ff9a1a 45%, #ffe14d);
+  background-size: 100% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 6px rgb(255 120 30 / 0.5));
+  animation: fire-shift 1.2s ease-in-out infinite alternate;
+}
+.flame {
+  display: inline-block;
+  transform-origin: 50% 90%;
+  animation: flame-flicker 0.9s ease-in-out infinite alternate;
+}
+@keyframes fire-shift {
+  from { background-position: 0 0; }
+  to { background-position: 0 100%; }
+}
+@keyframes flame-flicker {
+  0% { transform: scale(1) rotate(-4deg); }
+  50% { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(0.95) rotate(-2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .on-fire, .flame { animation: none; }
+}

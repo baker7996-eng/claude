@@ -84,6 +84,9 @@ Built primarily for one user (team id 66992), but may later support other users.
   accepts/declines, sender withdraws. Real trades still happen in FPL.
 - `/matchday`: live H2H (`src/lib/matchday.ts`), refreshes every 60s via
   `src/components/auto-refresh.tsx`; live FPL data cached 30s, finished GWs 1 day.
+  Any match opens with `?team=<entry id>`. Live predicted score = points so far
+  + each counted player's expected points for the minutes left (My team model),
+  plus auto-subs for 0-minute starters. 7+ points gets a star, 12+ a burning name.
 - `/me/draft`: second-draft board (GW22) and squad needs (`src/lib/draft.ts`).
 
 ## Design ("Matchday" theme, chosen by the owner)

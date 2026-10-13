@@ -1,10 +1,14 @@
 import "server-only";
 
-import { countedXI, loadLeague, picksOrNull } from "@/lib/facts/league";
+import { countedXI, loadLeague, picksOrNull, pointsByGameweek } from "@/lib/facts/league";
 import { fpl } from "@/lib/fpl/client";
 import type { Fixture } from "@/lib/fpl/types";
 
 export type PlayStatus = "played" | "playing" | "to-play" | "no-fixture";
+
+const FORM_WEEKS = 4;
+// Fixture difficulty (1 easiest - 5 hardest) -> points multiplier, as in My team advice.
+const DIFFICULTY_FACTOR: Record<number, number> = { 1: 1.3, 2: 1.15, 3: 1, 4: 0.85, 5: 0.7 };
 
 /**
  * A gameweek's head-to-heads from live data: every player's points so far
@@ -14,10 +18,37 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
   const lg = await loadLeague();
   const gw = requestedGw ?? lg.game.current_event;
   const live = !lg.game.current_event_finished && gw === lg.game.current_event;
-  const [points, fixtures] = await Promise.all([
+  const [points, fixtures, form, rated] = await Promise.all([
     live ? fpl.liveNow(gw) : fpl.live(gw),
     live ? fpl.fixturesNow(gw) : fpl.fixtures(gw),
+    pointsByGameweek(gw - FORM_WEEKS, gw - 1),
+    fpl.difficulty(),
   ]);
+
+  // What a player should still add this gameweek: the My team model (60%
+  // last-4 form + 40% points per game, scaled by fixture difficulty and
+  // chance of playing), for the part of each match not yet played.
+  const stillToCome = (playerId: number, fs: Fixture[]) => {
+    const p = lg.player(playerId);
+    if (!p) return 0;
+    const recent = form(playerId);
+    const base =
+      0.6 * (recent.reduce((a, b) => a + b, 0) / Math.max(1, recent.length)) + 0.4 * Number(p.points_per_game || 0);
+    const availability =
+      p.chance_of_playing_next_round !== null
+        ? p.chance_of_playing_next_round / 100
+        : p.status === "a" || p.status === "d"
+          ? 1
+          : 0;
+    return fs.reduce((sum, f) => {
+      if (f.finished || f.finished_provisional) return sum;
+      const home = f.team_h === p.team;
+      const r = rated.find((x) => x.event === gw && x.team_h === f.team_h && x.team_a === f.team_a);
+      const factor = DIFFICULTY_FACTOR[r ? (home ? r.team_h_difficulty : r.team_a_difficulty) : 3] ?? 1;
+      const left = f.started ? Math.max(0, 90 - (f.minutes ?? 0)) / 90 : availability;
+      return sum + base * factor * left;
+    }, 0);
+  };
 
   const teamFixtures = (teamId: number) => fixtures.filter((f) => f.team_h === teamId || f.team_a === teamId);
   const statusOf = (fs: Fixture[]): PlayStatus => {
@@ -30,7 +61,8 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
   const side = async (leagueEntry: number) => {
     const entry = lg.entries.get(leagueEntry)!;
     const picks = await picksOrNull(entry.entry_id, gw);
-    if (!picks) return { team: entry.entry_name, entryId: entry.entry_id, total: 0, toPlay: 0, players: [] };
+    if (!picks)
+      return { team: entry.entry_name, entryId: entry.entry_id, total: 0, projected: 0, toPlay: 0, players: [] };
     const counted = countedXI(picks);
     const players = [...picks.picks]
       .sort((a, b) => a.position - b.position)
@@ -48,6 +80,7 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
           counts: counted.has(pick.element),
           bench: pick.position > 11,
           status: statusOf(fs),
+          expected: stillToCome(pick.element, fs),
           fixture: fs
             .map((f) =>
               f.started
@@ -58,10 +91,23 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
         };
       });
     const xi = players.filter((p) => p.counts);
+    const total = xi.reduce((s, p) => s + p.points, 0);
+    // Starters who are done with 0 minutes will be auto-subbed by FPL at the
+    // end of the gameweek: count the next bench player who has (or may yet)
+    // play, keeping goalkeeper for goalkeeper.
+    const bench = players.filter((p) => !p.counts && p.bench);
+    let extra = 0;
+    for (const p of xi.filter((p) => p.status === "played" && p.minutes === 0)) {
+      const i = bench.findIndex((b) => (b.position === "GKP") === (p.position === "GKP") && (b.minutes > 0 || b.expected > 0));
+      if (i < 0) continue;
+      const [sub] = bench.splice(i, 1);
+      extra += sub.points + sub.expected;
+    }
     return {
       team: entry.entry_name,
       entryId: entry.entry_id,
-      total: xi.reduce((s, p) => s + p.points, 0),
+      total,
+      projected: Math.round(total + extra + xi.reduce((s, p) => s + p.expected, 0)),
       toPlay: xi.filter((p) => p.status === "to-play" || p.status === "playing").length,
       players,
     };
