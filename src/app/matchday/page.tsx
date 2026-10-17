@@ -64,12 +64,20 @@ export default async function MatchdayPage({ searchParams }: PageProps<"/matchda
               {md.them.total}
             </p>
             {!md.finished && (md.me.toPlay > 0 || md.them.toPlay > 0) && (
-              <p className="mt-1 text-xs text-soft md:text-sm">
-                Predicted{" "}
-                <span className="display text-base text-ink md:text-xl">
-                  {md.me.projected}–{md.them.projected}
-                </span>
-              </p>
+              <div className="mt-1 space-y-0.5 text-xs text-soft md:text-sm">
+                <p>
+                  Updated prediction{" "}
+                  <span className="display text-base text-ink md:text-xl">
+                    {md.me.projected}–{md.them.projected}
+                  </span>
+                </p>
+                <p>
+                  Original prediction{" "}
+                  <span className="display text-sm text-ink md:text-base">
+                    {md.me.original}–{md.them.original}
+                  </span>
+                </p>
+              </div>
             )}
           </div>
           <Scorer side={md.them} mood={mood(md.them.total, md.me.total)} />
@@ -107,8 +115,8 @@ export default async function MatchdayPage({ searchParams }: PageProps<"/matchda
 
       <p className="text-xs text-soft">
         Totals count your starting XI (and any automatic subs FPL has made). Bonus points are provisional until
-        FPL confirms them. Predicted scores update with every refresh: points so far plus what each player
-        should add in the minutes left (form, fixture difficulty and chance of playing).{" "}
+        FPL confirms them. The updated prediction changes with every refresh: points so far plus what each player
+        should add in the minutes left (form, fixture difficulty and chance of playing). The original prediction is the expected points of each full XI before any games.{" "}
         {md.gw > 1 && (
           <Link href={`/matchday?gw=${md.gw - 1}${mine ? "" : `&team=${md.me.entryId}`}`} className="text-lime hover:underline">
             Previous gameweek

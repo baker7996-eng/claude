@@ -28,7 +28,7 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
   // What a player should still add this gameweek: the My team model (60%
   // last-4 form + 40% points per game, scaled by fixture difficulty and
   // chance of playing), for the part of each match not yet played.
-  const stillToCome = (playerId: number, fs: Fixture[]) => {
+  const stillToCome = (playerId: number, fs: Fixture[], fullMatch = false) => {
     const p = lg.player(playerId);
     if (!p) return 0;
     const recent = form(playerId);
@@ -41,11 +41,11 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
           ? 1
           : 0;
     return fs.reduce((sum, f) => {
-      if (f.finished || f.finished_provisional) return sum;
+      if (!fullMatch && (f.finished || f.finished_provisional)) return sum;
       const home = f.team_h === p.team;
       const r = rated.find((x) => x.event === gw && x.team_h === f.team_h && x.team_a === f.team_a);
       const factor = DIFFICULTY_FACTOR[r ? (home ? r.team_h_difficulty : r.team_a_difficulty) : 3] ?? 1;
-      const left = f.started ? Math.max(0, 90 - (f.minutes ?? 0)) / 90 : availability;
+      const left = f.started && !fullMatch ? Math.max(0, 90 - (f.minutes ?? 0)) / 90 : availability;
       return sum + base * factor * left;
     }, 0);
   };
@@ -62,7 +62,7 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
     const entry = lg.entries.get(leagueEntry)!;
     const picks = await picksOrNull(entry.entry_id, gw);
     if (!picks)
-      return { team: entry.entry_name, entryId: entry.entry_id, total: 0, projected: 0, toPlay: 0, players: [] };
+      return { team: entry.entry_name, entryId: entry.entry_id, total: 0, projected: 0, original: 0, toPlay: 0, players: [] };
     const counted = countedXI(picks);
     const players = [...picks.picks]
       .sort((a, b) => a.position - b.position)
@@ -81,6 +81,7 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
           bench: pick.position > 11,
           status: statusOf(fs),
           expected: stillToCome(pick.element, fs),
+          preMatch: stillToCome(pick.element, fs, true),
           fixture: fs
             .map((f) =>
               f.started
@@ -107,6 +108,8 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
       team: entry.entry_name,
       entryId: entry.entry_id,
       total,
+      // The pre-kick-off view: every counted player's full expected points.
+      original: Math.round(xi.reduce((s, p) => s + p.preMatch, 0)),
       projected: Math.round(total + extra + xi.reduce((s, p) => s + p.expected, 0)),
       toPlay: xi.filter((p) => p.status === "to-play" || p.status === "playing").length,
       players,
