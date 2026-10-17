@@ -85,24 +85,60 @@ body {
   .face .face-body, .face .face-eyes, .face .face-tear { animation: none; }
 }
 
-/* Matchday: 12+ point players' names burn */
+/* Matchday: 12+ point players keep a readable name, with flames rising off the letters */
 .on-fire {
-  background: linear-gradient(0deg, #ff4d1a, #ff9a1a 45%, #ffe14d);
-  background-size: 100% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 6px rgb(255 120 30 / 0.5));
-  animation: fire-shift 1.2s ease-in-out infinite alternate;
+  position: relative;
+  display: inline-block;
+  color: #fff4d6;
+  text-shadow:
+    0 0 3px #ffd24d,
+    0 -3px 6px #ff9a1a,
+    0 -7px 11px #ff5a1a;
+  animation: fire-glow 0.7s ease-in-out infinite alternate;
+}
+.on-fire::before,
+.on-fire::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: 70%;
+  height: 1.15em;
+  pointer-events: none;
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, #000 35%, transparent);
+}
+.on-fire::before {
+  background-image:
+    radial-gradient(ellipse 45% 100% at 50% 100%, #ff4a1a 0%, #ff8a1a 55%, transparent 80%),
+    radial-gradient(ellipse 40% 100% at 50% 100%, #ff6a1a 0%, #ff9a2a 55%, transparent 80%);
+  background-size: 0.62em 100%, 0.41em 72%;
+  background-position: 0.1em 100%, 0.27em 100%;
+  animation: fire-lick 0.55s ease-in-out infinite alternate;
+}
+.on-fire::after {
+  height: 0.8em;
+  background-image:
+    radial-gradient(ellipse 36% 100% at 50% 100%, #ffe14d 0%, #ffb52e 55%, transparent 80%),
+    radial-gradient(ellipse 36% 100% at 50% 100%, #fff0a0 0%, #ffd24d 55%, transparent 80%);
+  background-size: 0.53em 85%, 0.29em 55%;
+  background-position: 0.3em 100%, 0.05em 100%;
+  animation: fire-lick 0.4s ease-in-out infinite alternate-reverse;
 }
 .flame {
   display: inline-block;
   transform-origin: 50% 90%;
   animation: flame-flicker 0.9s ease-in-out infinite alternate;
 }
-@keyframes fire-shift {
-  from { background-position: 0 0; }
-  to { background-position: 0 100%; }
+@keyframes fire-glow {
+  from { text-shadow: 0 0 3px #ffd24d, 0 -3px 6px #ff9a1a, 0 -6px 10px #ff5a1a; }
+  to { text-shadow: 0 0 4px #ffe14d, 0 -4px 8px #ffb52e, 0 -9px 13px #ff4a1a; }
+}
+@keyframes fire-lick {
+  from { transform: scaleY(0.75) skewX(-4deg); }
+  to { transform: scaleY(1.1) skewX(4deg); }
 }
 @keyframes flame-flicker {
   0% { transform: scale(1) rotate(-4deg); }
@@ -110,5 +146,5 @@ body {
   100% { transform: scale(0.95) rotate(-2deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .on-fire, .flame { animation: none; }
+  .on-fire, .on-fire::before, .on-fire::after, .flame { animation: none; }
 }
