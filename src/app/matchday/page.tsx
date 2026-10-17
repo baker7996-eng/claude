@@ -147,22 +147,55 @@ const STATUS: Record<PlayStatus, { dot: string; label: string }> = {
 function Lineup({ side, title }: { side: Side; title: string }) {
   const xi = side.players.filter((p) => !p.bench);
   const bench = side.players.filter((p) => p.bench);
-  const row = (p: Side["players"][number]) => (
-    <li key={p.id} className={`flex items-center gap-2.5 py-2 ${p.counts ? "" : "text-soft"}`}>
-      <span className={`size-2.5 shrink-0 rounded-full ${STATUS[p.status].dot}`} title={STATUS[p.status].label} />
-      <span className="min-w-0 flex-1">
-        <PlayerName name={p.name} points={p.points} />
-        <span className="ml-1.5 text-xs text-soft">
-          {p.position} · {p.fixture}
-          {p.status !== "to-play" && ` · ${p.minutes}'`}
-          {p.counts && p.expected >= 0.5 && ` · exp +${Math.round(p.expected)}`}
+  const row = (p: Side["players"][number]) => {
+    const summary = (
+      <>
+        <span className={`size-2.5 shrink-0 rounded-full ${STATUS[p.status].dot}`} title={STATUS[p.status].label} />
+        <span className="min-w-0 flex-1">
+          <PlayerName name={p.name} points={p.points} />
+          <span className="ml-1.5 text-xs text-soft">
+            {p.position} · {p.fixture}
+            {p.status !== "to-play" && ` · ${p.minutes}'`}
+            {p.counts && p.expected >= 0.5 && ` · exp +${Math.round(p.expected)}`}
+          </span>
         </span>
-      </span>
-      <span className={`display text-lg ${p.points >= 12 ? "text-amber" : p.points >= 7 ? "text-lime" : p.points < 0 ? "text-loss" : ""}`}>
-        {p.points}
-      </span>
-    </li>
-  );
+        <span className={`display text-lg ${p.points >= 12 ? "text-amber" : p.points >= 7 ? "text-lime" : p.points < 0 ? "text-loss" : ""}`}>
+          {p.points}
+        </span>
+      </>
+    );
+    return (
+      <li key={p.id} className={p.counts ? "" : "text-soft"}>
+        {p.breakdown.length === 0 ? (
+          <div className="flex items-center gap-2.5 py-2">{summary}</div>
+        ) : (
+          <details className="group">
+            <summary className="flex cursor-pointer list-none items-center gap-2.5 py-2 [&::-webkit-details-marker]:hidden">
+              {summary}
+              <span aria-hidden className="text-xs text-soft transition-transform group-open:rotate-180">
+                ▾
+              </span>
+            </summary>
+            <ul className="mb-2 ml-5 space-y-1 rounded-[3px] border border-line bg-pitch px-3 py-2 text-sm">
+              {p.breakdown.map((l) => (
+                <li key={l.label} className="flex justify-between gap-3">
+                  <span>{l.label}</span>
+                  <span className={`display ${l.points < 0 ? "text-loss" : "text-ink"}`}>
+                    {l.points > 0 ? "+" : ""}
+                    {l.points}
+                  </span>
+                </li>
+              ))}
+              <li className="flex justify-between gap-3 border-t border-line pt-1 font-semibold text-ink">
+                <span>Total</span>
+                <span className="display">{p.points}</span>
+              </li>
+            </ul>
+          </details>
+        )}
+      </li>
+    );
+  };
   return (
     <Panel title={title}>
       <ul className="divide-y divide-line">{xi.map(row)}</ul>
@@ -175,6 +208,7 @@ function Lineup({ side, title }: { side: Side; title: string }) {
             {STATUS[s].label}
           </span>
         ))}
+        <span>Tap a player for their points</span>
         <span>⭐ 7+ points</span>
         <span>🔥 12+ points</span>
       </p>

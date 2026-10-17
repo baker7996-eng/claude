@@ -153,7 +153,14 @@ export interface LiveStats {
 }
 
 export interface EventLive {
-  elements: Record<string, { stats: LiveStats }>;
+  elements: Record<
+    string,
+    {
+      stats: LiveStats;
+      // FPL's own points breakdown, one entry per fixture: [[{name, points, value}...], fixtureId]
+      explain?: [{ name: string; points: number; value: number }[], number][];
+    }
+  >;
 }
 
 /** A fixture from the main FPL game, with difficulty for each side. */

@@ -2,7 +2,25 @@ import "server-only";
 
 import { countedXI, loadLeague, picksOrNull, pointsByGameweek } from "@/lib/facts/league";
 import { fpl } from "@/lib/fpl/client";
-import type { Fixture } from "@/lib/fpl/types";
+import type { EventLive, Fixture } from "@/lib/fpl/types";
+
+export interface PointsLine {
+  label: string;
+  points: number;
+}
+
+/** Where a player's points came from, using FPL's own explanation (bonus is provisional until confirmed). */
+function pointsBreakdown(explain: NonNullable<EventLive["elements"][string]["explain"]> | undefined): PointsLine[] {
+  const merged = new Map<string, number>();
+  for (const [lines] of explain ?? []) {
+    for (const l of lines) {
+      if (l.points === 0) continue;
+      const label = l.name === "Minutes played" ? `${l.value} minutes` : l.value > 1 ? `${l.name} (${l.value})` : l.name;
+      merged.set(label, (merged.get(label) ?? 0) + l.points);
+    }
+  }
+  return [...merged].map(([label, points]) => ({ label, points }));
+}
 
 export type PlayStatus = "played" | "playing" | "to-play" | "no-fixture";
 
@@ -79,6 +97,7 @@ export async function loadMatchday(entryId: number, requestedGw?: number) {
           minutes: stats?.minutes ?? 0,
           counts: counted.has(pick.element),
           bench: pick.position > 11,
+          breakdown: pointsBreakdown(points.elements[pick.element]?.explain),
           status: statusOf(fs),
           expected: stillToCome(pick.element, fs),
           preMatch: stillToCome(pick.element, fs, true),
