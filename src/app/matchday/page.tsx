@@ -77,7 +77,7 @@ export default async function MatchdayPage({ searchParams }: PageProps<"/matchda
       </section>
 
       {/* Every match this gameweek; tap one to open it */}
-      <p className="display -mb-1 text-xs tracking-[0.14em] text-soft">All matches · tap one to open it</p>
+      <p className="display mt-1 text-xs tracking-[0.14em] text-soft">All matches · tap one to open it</p>
       <nav aria-label="Matches this gameweek" className="grid gap-2 sm:grid-cols-3">
         {ties.map((t) => {
           const open = t.home.entryId === md.me!.entryId || t.away.entryId === md.me!.entryId;
