@@ -152,7 +152,7 @@ function Lineup({ side, title }: { side: Side; title: string }) {
       <>
         <span className={`size-2.5 shrink-0 rounded-full ${STATUS[p.status].dot}`} title={STATUS[p.status].label} />
         <span className="min-w-0 flex-1">
-          <PlayerName name={p.name} points={p.points} />
+          <PlayerName name={p.name} points={p.points} played={p.minutes > 0} />
           <span className="ml-1.5 text-xs text-soft">
             {p.position} · {p.fixture}
             {p.status !== "to-play" && ` · ${p.minutes}'`}
@@ -211,13 +211,14 @@ function Lineup({ side, title }: { side: Side; title: string }) {
         <span>Tap a player for their points</span>
         <span>⭐ 7+ points</span>
         <span>🔥 12+ points</span>
+        <span>❄️ 2 or less</span>
       </p>
     </Panel>
   );
 }
 
-/** 7+ points earns a star; 12+ sets the name on fire. */
-function PlayerName({ name, points }: { name: string; points: number }) {
+/** 7+ points earns a star; 12+ sets the name on fire; 2 or less after playing freezes it. */
+function PlayerName({ name, points, played }: { name: string; points: number; played: boolean }) {
   if (points >= 12)
     return (
       <span className="font-semibold">
@@ -231,6 +232,15 @@ function PlayerName({ name, points }: { name: string; points: number }) {
     return (
       <span className="font-semibold">
         {name} <span aria-label="star">⭐</span>
+      </span>
+    );
+  if (played && points <= 2)
+    return (
+      <span>
+        <span className="on-ice">{name}</span>{" "}
+        <span aria-label="frozen" className="snow">
+          ❄️
+        </span>
       </span>
     );
   return <>{name}</>;

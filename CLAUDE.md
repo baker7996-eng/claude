@@ -86,7 +86,7 @@ Built primarily for one user (team id 66992), but may later support other users.
   `src/components/auto-refresh.tsx`; live FPL data cached 30s, finished GWs 1 day.
   Any match opens with `?team=<entry id>`. Live predicted score = points so far
   + each counted player's expected points for the minutes left (My team model),
-  plus auto-subs for 0-minute starters. 7+ points gets a star, 12+ a burning name.
+  plus auto-subs for 0-minute starters. 7+ points gets a star, 12+ a burning name, 2 or less (having played) a frozen one.
   Tapping a player expands FPL's own points breakdown (`explain` in the live feed).
 - `/me/draft`: second-draft board (GW22) and squad needs (`src/lib/draft.ts`).
 
