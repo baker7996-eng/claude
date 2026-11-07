@@ -51,11 +51,11 @@ export default async function MyTeamPage() {
         </div>
       </header>
 
+      <FixtureOutlook advice={advice} />
       <div className="grid items-start gap-3 md:gap-4 lg:grid-cols-2">
         <Swaps advice={advice} />
         <Trades advice={advice} />
       </div>
-      <FixtureOutlook advice={advice} />
       <Upcoming advice={advice} />
       <p className="text-xs text-soft">
         How this works: projected points = recent form (last 4 gameweeks, 60%) and season points per game
@@ -174,7 +174,7 @@ function FixtureChip({ f }: { f: Fixture }) {
 
 function FixtureOutlook({ advice }: { advice: Advice }) {
   return (
-    <Panel title="Fixture outlook">
+    <Panel title="My squad">
       <p className="mb-2 text-xs text-soft">
         Capitals = home, lower case = away. Green easy, amber tough, red hardest (FPL difficulty).
       </p>

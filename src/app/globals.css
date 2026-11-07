@@ -145,44 +145,6 @@ body {
   50% { transform: scale(1.15) rotate(3deg); }
   100% { transform: scale(0.95) rotate(-2deg); }
 }
-/* Matchday: players who played and got 2 or less freeze, with icicles hanging off the letters */
-.on-ice {
-  position: relative;
-  display: inline-block;
-  color: #aeeaff;
-  text-shadow: 0 0 2px #fff, 0 0 8px #38bdf8, 0 0 14px #0ea5e9;
-  animation: ice-glow 1.6s ease-in-out infinite alternate;
-}
-.on-ice::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 88%;
-  height: 0.7em;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 14' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 8,0 4,12' fill='%23e6fbff'/%3E%3Cpolygon points='8,0 14,0 11,7' fill='%2399e0ff'/%3E%3Cpolygon points='14,0 24,0 19,14' fill='%23c4f1ff'/%3E%3C/svg%3E");
-  background-size: 1.1em 100%;
-  background-repeat: repeat-x;
-  filter: drop-shadow(0 0 3px #38bdf8);
-  transform-origin: 50% 0;
-  animation: ice-drip 2.4s ease-in-out infinite alternate;
-}
-.snow {
-  display: inline-block;
-  animation: snow-spin 4s linear infinite;
-}
-@keyframes ice-glow {
-  from { text-shadow: 0 0 2px #fff, 0 0 7px #38bdf8, 0 0 12px #0ea5e9; }
-  to { text-shadow: 0 0 3px #fff, 0 0 10px #7dd3fc, 0 0 18px #38bdf8; }
-}
-@keyframes ice-drip {
-  from { transform: scaleY(0.9); }
-  to { transform: scaleY(1.12); }
-}
-@keyframes snow-spin {
-  to { transform: rotate(360deg); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .on-fire, .on-fire::before, .on-fire::after, .flame, .on-ice, .on-ice::after, .snow { animation: none; }
+  .on-fire, .on-fire::before, .on-fire::after, .flame { animation: none; }
 }

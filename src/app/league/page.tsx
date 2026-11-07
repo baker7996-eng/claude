@@ -22,7 +22,6 @@ export default async function LeaguePage() {
 
   return (
     <div className="grid items-start gap-3 md:gap-4 lg:grid-cols-5">
-      <MoodBoard lg={lg} myName={myName} />
       <Panel title="Table" className="lg:col-span-3">
         <div className="-mx-4 overflow-x-auto px-4">
           <table className="w-full min-w-[22rem] tabular-nums">
@@ -85,6 +84,8 @@ export default async function LeaguePage() {
           ))}
         </div>
       </Panel>
+
+      <MoodBoard lg={lg} myName={myName} />
     </div>
   );
 }
