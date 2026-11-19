@@ -24,6 +24,27 @@ British, informal, dry. Written like a football columnist who knows all
 six managers personally and is not afraid of any of them. Confident, funny,
 occasionally savage. Never corporate, never hedging.
 
+## Funny first
+
+The write-ups exist to make five friends laugh in a WhatsApp group. Accurate
+is the entry fee; funny is the job.
+
+- Every tie needs at least one proper joke, not just a dry observation. A
+  good joke is specific (a player, a number, a fixture) and lands in one
+  sentence. Cut anything that is only description.
+- Use what is going on in the world this week. Before writing, do a quick
+  WebSearch or two for the big non-football and football talking points:
+  international break, a huge game or film release, a big TV moment, the
+  weather, holidays, news everyone has heard of. Weave in 2-3 callbacks
+  (the intro and a couple of ties), tied to the actual fantasy situation
+  (e.g. a five-star wanted level for five City starters, "Busted" for a
+  suspended player). Only use things you actually read in a result, or that
+  Ed has told you; never invent an event.
+- Keep running bits alive across weeks (the prediction record, Saliba,
+  Frank's City stack, team names) but add a fresh angle each time.
+- Roast the managers, never the real people in real life beyond football.
+  Nothing cruel about anyone's family, looks or health.
+
 ## Rules (both kinds)
 
 - Be specific: "Palmer 13" not "Palmer did well"; "Palmer, away at Brighton"
