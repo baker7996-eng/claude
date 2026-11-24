@@ -94,12 +94,18 @@ export interface ScoredTie {
   verdict: Verdict;
 }
 
+// Teams that have been renamed in FPL: old name -> current name. Predictions are
+// stored with the names used on the day, so without this a rename would make
+// every earlier prediction for that team stop matching and drop out of the record.
+const RENAMED_TEAMS: Record<string, string> = { "Itch Isak": "Change Name" };
+
 /**
  * Logged predictions (committed file plus uploads) compared with real
  * results. A hit means the right winner (or a predicted draw that was a draw).
  */
 export async function scoredPredictions(league: LeagueDetails) {
   const name = new Map(league.league_entries.map((e) => [e.id, e.entry_name]));
+  const current = (team: string) => RENAMED_TEAMS[team] ?? team;
   const uploaded = (await store.get<{ gw: number; ties: PredictedTie[] }[]>(PREDICTIONS_KEY)) ?? [];
   const byGw = new Map<number, PredictedTie[]>(
     predictionsFile.gameweeks.map((g) => [g.gw, g.ties as PredictedTie[]]),
@@ -113,8 +119,8 @@ export async function scoredPredictions(league: LeagueDetails) {
         const match = league.matches.find(
           (m) =>
             m.event === gw &&
-            name.get(m.league_entry_1) === t.teams[0] &&
-            name.get(m.league_entry_2) === t.teams[1],
+            name.get(m.league_entry_1) === current(t.teams[0]) &&
+            name.get(m.league_entry_2) === current(t.teams[1]),
         );
         if (!match?.finished) return { ...t, actual: null, verdict: "pending" };
         const actual: [number, number] = [match.league_entry_1_points, match.league_entry_2_points];
